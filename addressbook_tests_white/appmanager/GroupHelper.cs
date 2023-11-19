@@ -14,6 +14,8 @@ namespace addressbook_tests_white
     public class GroupHelper : HelperBase
     {
         public static string GROUPWINTITLE = "Group editor";
+        public static string DELETEGROUPTITLE = "Delete group";
+
         public GroupHelper(ApplicationManager manager) : base(manager) { }
         
         public List<GroupData> GetGroupList()
@@ -41,8 +43,7 @@ namespace addressbook_tests_white
             TextBox textbox = (TextBox) dialogue.Get(SearchCriteria.ByControlType(ControlType.Edit));
             textbox.Enter(newGroup.Name);
             //Эмулировать нажатие клавиши ентер
-            Keyboard.Instance.PressSpecialKey(KeyboardInput.SpecialKeys.RETURN);
-            
+            Keyboard.Instance.PressSpecialKey(KeyboardInput.SpecialKeys.RETURN);            
             CloseGroupsDialogue(dialogue);
         }
 
@@ -55,6 +56,27 @@ namespace addressbook_tests_white
         {
             manager.MainWindow.Get<Button>("groupButton").Click();
             return manager.MainWindow.ModalWindow(GROUPWINTITLE);
+        }
+
+        public void DeleteGroup(int i)
+        {
+            Window dialogue = OpenGroupsDialogue();       
+            Tree tree = dialogue.Get<Tree>("uxAddressTreeView");
+            TreeNode root = tree.Nodes[0];
+            TreeNodes node = root.Nodes;
+            node[i].Select();
+            dialogue.Get<Button>("uxDeleteAddressButton").Click();
+            Window confirm = dialogue.ModalWindow(DELETEGROUPTITLE);
+            confirm.Get<Button>("uxOKAddressButton").Click();
+            CloseGroupsDialogue(dialogue);
+        }
+
+        public int NumberOfGroups()
+        {
+            Window dialogue = OpenGroupsDialogue();
+            Tree tree = dialogue.Get<Tree>("uxAddressTreeView");
+            CloseGroupsDialogue(dialogue);
+            return tree.Nodes.Count;
         }
     }    
 }
