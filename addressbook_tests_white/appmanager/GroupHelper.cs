@@ -75,8 +75,9 @@ namespace addressbook_tests_white
         {
             Window dialogue = OpenGroupsDialogue();
             Tree tree = dialogue.Get<Tree>("uxAddressTreeView");
+            int numberOfGroups = tree.Nodes[0].Nodes.Count;
             CloseGroupsDialogue(dialogue);
-            return tree.Nodes.Count;
+            return numberOfGroups;
         }
     }    
 }
